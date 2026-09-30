@@ -1,0 +1,1119 @@
+<!DOCTYPE html><html><head><script src="https://unpkg.com/lucide@latest"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></head><body>
+
+
+  <meta charset="UTF-8" data-node-id="node-l1wq03h51">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" data-node-id="node-xe57o8pcw">
+  <title data-node-id="node-2c2bnm6hg">TrueDrive Profit — See what you really made</title>
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" data-node-id="node-yemu56199">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" data-node-id="node-opx0hamrv">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&amp;display=swap" rel="stylesheet" data-node-id="node-7emykg4dk">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" data-node-id="node-2u5jtxrx6">
+  <!-- Tailwind via CDN (for layout utilities) -->
+  <script src="https://cdn.tailwindcss.com" data-node-id="node-og3x9ebpu"></script>
+  <script data-node-id="node-il1xw6x2x">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#F8F9FC',
+              surface: '#FFFFFF',
+              border: '#E9ECF2',
+              text: '#1A1F2E',
+              muted: '#5A6579',
+              accent: '#2463EB',
+              accentSoft: '#EFF4FF',
+              success: '#0D7A5F',
+              warning: '#B45309',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Bricolage Grotesque', 'sans-serif'],
+          },
+          borderRadius: { 'xl': '1rem', '2xl': '1.5rem', '3xl': '2rem' }
+        }
+      }
+    }
+  </script>
+  <style data-node-id="node-o76uig5kt">
+    /* === Design Tokens === */
+    :root {
+      --bg: #F8F9FC;
+      --surface: #FFFFFF;
+      --border: #E9ECF2;
+      --ink: #1A1F2E;
+      --muted: #5A6579;
+      --accent: #2463EB;
+      --accent-soft: #EFF4FF;
+      --success: #0D7A5F;
+      --warning: #B45309;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.02), 0 4px 16px rgba(0,0,0,0.02);
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.02);
+      --radius: 1.25rem;
+      --radius-sm: 0.75rem;
+      --font-display: 'Bricolage Grotesque', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-body);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 2rem;
+    }
+    h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; }
+    h1 { font-size: clamp(2.2rem, 6vw, 3.8rem); line-height: 1.1; font-weight: 800; }
+    h2 { font-size: clamp(1.6rem, 4vw, 2.4rem); line-height: 1.2; }
+    h3 { font-size: 1.25rem; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 1.25rem; }
+    /* === Cards & Surfaces === */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      padding: 1.5rem;
+      transition: box-shadow 0.2s ease, border-color 0.2s;
+    }
+    .card:hover { box-shadow: var(--shadow-md); border-color: #d0d8e4; }
+    .card-flat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+    /* === Buttons === */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      font-weight: 600; border-radius: 60px; padding: 0.8rem 1.6rem;
+      transition: all 0.2s ease; cursor: pointer; border: 1px solid transparent;
+      font-size: 0.95rem; line-height: 1.2;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 4px 14px rgba(36,99,235,0.25); }
+    .btn-primary:hover { background: #1a4fd0; box-shadow: 0 8px 24px rgba(36,99,235,0.3); transform: translateY(-1px); }
+    .btn-secondary { background: var(--surface); border: 1px solid var(--border); color: var(--ink); box-shadow: var(--shadow-sm); }
+    .btn-secondary:hover { background: #fbfcff; border-color: #cbd5e1; }
+    .btn-ghost { background: transparent; border: 1px solid transparent; color: var(--muted); }
+    .btn-ghost:hover { background: var(--accent-soft); color: var(--accent); }
+    .btn-sm { padding: 0.5rem 1rem; font-size: 0.85rem; }
+    /* === Inputs === */
+    .input, .select {
+      width: 100%; padding: 0.8rem 1rem; border-radius: 0.75rem;
+      border: 1px solid var(--border); background: var(--surface);
+      font-size: 1rem; font-family: var(--font-body);
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+    .input:focus, .select:focus {
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(36,99,235,0.15);
+    }
+    .input-label { display: block; font-size: 0.85rem; font-weight: 500; color: var(--muted); margin-bottom: 0.35rem; }
+    .input-group { margin-bottom: 1rem; }
+    .input-error { border-color: #e11d48; }
+    /* === Utility === */
+    .text-muted { color: var(--muted); }
+    .text-accent { color: var(--accent); }
+    .text-success { color: var(--success); }
+    .bg-soft { background: var(--bg); }
+    .divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+    .badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.75rem; border-radius: 60px; font-size: 0.75rem; font-weight: 600; }
+    .badge-accent { background: var(--accent-soft); color: var(--accent); }
+    .badge-green { background: #e6f7f0; color: #0D7A5F; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+    /* === Animations === */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-up { animation: fadeUp 0.5s ease forwards; }
+    .stagger-1 { animation-delay: 0.05s; }
+    .stagger-2 { animation-delay: 0.1s; }
+    .stagger-3 { animation-delay: 0.15s; }
+    /* === Results visual === */
+    .profit-hero { font-size: clamp(2.8rem, 8vw, 4.5rem); font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
+    .bar-chart { display: flex; flex-direction: column; gap: 0.75rem; }
+    .bar-item { display: flex; align-items: center; gap: 0.75rem; }
+    .bar-label { width: 6rem; font-size: 0.85rem; color: var(--muted); }
+    .bar-track { flex: 1; height: 0.75rem; background: #eef1f6; border-radius: 999px; overflow: hidden; }
+    .bar-fill { height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    .bar-value { width: 3.5rem; text-align: right; font-size: 0.85rem; font-weight: 500; }
+    /* === Mobile step nav === */
+    .step-pill { display: flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.9rem; border-radius: 60px; font-size: 0.8rem; font-weight: 500; background: #fff; border: 1px solid var(--border); color: var(--muted); }
+    .step-pill.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .step-pill.completed { background: var(--accent-soft); border-color: transparent; color: var(--accent); }
+    /* === Misc === */
+    .vehicle-selector-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    @media (min-width: 640px) { .vehicle-selector-grid { grid-template-columns: 1fr 1fr 1fr 1fr; } }
+    .scroll-hide { scrollbar-width: none; -ms-overflow-style: none; }
+    .scroll-hide::-webkit-scrollbar { display: none; }
+  </style>
+
+
+
+<!-- ========== HEADER ========== -->
+<header class="sticky top-0 z-40 bg-white/80 backdrop-blur-lg border-b border-[#E9ECF2]" data-node-id="node-dit03e7k0">
+  <div class="container flex items-center justify-between h-16" data-node-id="node-aovn41a13">
+    <div class="flex items-center gap-2" data-node-id="node-ytk6jndc4">
+      <i class="fas fa-car-side text-xl text-[#2463EB]" data-node-id="node-cjb26rkje"></i>
+      <span class="font-display font-extrabold text-xl tracking-tight" data-node-id="node-4yc9gep09">TrueDrive<span class="text-[#2463EB]" data-node-id="node-acezdp27a">Profit</span></span>
+    </div>
+    <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-[#5A6579]" data-node-id="node-5wbkzvh20">
+      <a href="#how" class="hover:text-[#1A1F2E] transition" data-node-id="node-l37hnq70y">How it works</a>
+      <a href="#calculator" class="hover:text-[#1A1F2E] transition" data-node-id="node-lhqjwhqp4">Calculator</a>
+      <a href="#dashboard" class="hover:text-[#1A1F2E] transition" data-node-id="node-k1hkylfas">Dashboard</a>
+      <a href="#break-even" class="hover:text-[#1A1F2E] transition" data-node-id="node-djzt9alck">Tools</a>
+    </nav>
+    <div class="flex items-center gap-3" data-node-id="node-rp8zrtd3s">
+      <button class="btn btn-secondary btn-sm" id="themeToggle" aria-label="Toggle theme" data-node-id="node-kggua2p8x">
+        <i class="fas fa-moon" data-node-id="node-owa2fl0fk"></i>
+      </button>
+      <button class="btn btn-primary btn-sm hidden sm:inline-flex" onclick="document.getElementById('calculator').scrollIntoView({behavior:'smooth'})" data-node-id="node-xwyuh12b6">
+        <i class="fas fa-calculator" data-node-id="node-snk4hkei5"></i> Calculate
+      </button>
+      <button class="md:hidden p-2 rounded-lg hover:bg-[#EFF4FF]" id="mobileMenuBtn" aria-label="Menu" data-node-id="node-t6ar8pqoi">
+        <i class="fas fa-bars text-lg" data-node-id="node-nqt2qvdja"></i>
+      </button>
+    </div>
+  </div>
+  <!-- Mobile menu -->
+  <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-[#E9ECF2] px-5 py-4 space-y-3" data-node-id="node-1vosmadum">
+    <a href="#how" class="block py-2 font-medium" data-node-id="node-n06ffs9mb">How it works</a>
+    <a href="#calculator" class="block py-2 font-medium" data-node-id="node-kfxz04s80">Calculator</a>
+    <a href="#dashboard" class="block py-2 font-medium" data-node-id="node-r7pa3slda">Dashboard</a>
+    <a href="#break-even" class="block py-2 font-medium" data-node-id="node-7i6xdjdwq">Tools</a>
+    <button class="btn btn-primary w-full" onclick="document.getElementById('calculator').scrollIntoView({behavior:'smooth'})" data-node-id="node-8zxwnwpsp">Calculate My Real Profit</button>
+  </div>
+</header>
+
+<!-- ========== HERO ========== -->
+<section class="container pt-12 pb-8 md:pt-20 md:pb-16" data-node-id="node-2ar2q9ylr" style="position: relative;">
+  <div class="max-w-4xl mx-auto text-center" data-node-id="node-fneo5fvab" style="position: relative;">
+    <div class="inline-flex items-center gap-2 bg-[#EFF4FF] text-[#2463EB] rounded-full px-4 py-1.5 text-xs font-semibold mb-6" data-node-id="node-lfgy8d12n">
+      <i class="fas fa-bolt" data-node-id="node-43s770uw2"></i> Built for Uber, Lyft &amp; gig drivers
+    </div>
+    <h1 class="fade-up" data-node-id="node-r32gzpdxe">You made $200 today.<br class="hidden sm:block" data-node-id="node-pofpwsrdi"> But did you actually make $200?</h1>
+    <p class="text-lg md:text-xl text-[#5A6579] mt-5 max-w-2xl mx-auto leading-relaxed fade-up stagger-1" data-node-id="node-0kp4lhthj" style="position: relative;">
+      See what you <strong class="text-[#1A1F2E]" data-node-id="node-d8qekk4si">REALLY</strong> made after fuel, maintenance, depreciation, insurance and other vehicle costs.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-3 justify-center mt-8 fade-up stagger-2" data-node-id="node-9mfs11uqn">
+      <button class="btn btn-primary text-base px-8 py-4" onclick="document.getElementById('calculator').scrollIntoView({behavior:'smooth'})" data-node-id="node-bshw8ct95">
+        <i class="fas fa-calculator" data-node-id="node-daxry5chp"></i> Calculate My Real Profit
+      </button>
+      <button class="btn btn-secondary text-base px-8 py-4" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})" data-node-id="node-ms3fw6kxs">
+        See how it works
+      </button>
+    </div>
+    <div class="mt-12 grid md:grid-cols-2 gap-6 max-w-3xl mx-auto text-left fade-up stagger-3" data-node-id="node-xcbpgnqch" style="position: relative;">
+      <div class="card-flat bg-white/60 backdrop-blur-sm border-dashed" data-node-id="node-blu39npaw" style="position: relative;">
+        <div class="text-xs font-semibold text-[#5A6579] uppercase tracking-wider mb-3" data-node-id="node-u0fc8r36i">What most drivers calculate</div>
+        <div class="space-y-2 text-sm" data-node-id="node-0698ke4qh" style="position: relative;">
+          <div class="flex justify-between" data-node-id="node-xsgibfjqx"><span class="text-[#5A6579]" data-node-id="node-sg68qk8lm">$200 earnings</span><span class="text-[#5A6579]" data-node-id="node-xf12ki3w3">—</span></div>
+          <div class="flex justify-between" data-node-id="node-hg2yinyxd" style="position: relative;"><span class="text-[#5A6579]" data-node-id="node-vtixx13rt">− $50 fuel</span><span class="text-[#5A6579]" data-node-id="node-7qjoz3ujv">—</span></div>
+          <div class="flex justify-between border-t border-[#E9ECF2] pt-2 font-bold" data-node-id="node-hb9x95l2x"><span data-node-id="node-gn556eo35">= $150 "profit"</span><span class="text-[#5A6579]" data-node-id="node-xuujer7oz">—</span></div>
+        </div>
+      </div>
+      <div class="card-flat bg-white border-[#2463EB]/20 shadow-md" data-node-id="node-fyprhj97l">
+        <div class="text-xs font-semibold text-[#2463EB] uppercase tracking-wider mb-3" data-node-id="node-x7f0zrzs2">What TrueDrive calculates</div>
+        <div class="space-y-1.5 text-sm" data-node-id="node-xx9dgebvg">
+          <div class="flex justify-between" data-node-id="node-k2il7i6vj"><span class="text-[#5A6579]" data-node-id="node-l6u00gdkt">$200 earnings</span><span data-node-id="node-dz8qlk2uk">—</span></div>
+          <div class="flex justify-between" data-node-id="node-2rh81ifbu"><span class="text-[#5A6579]" data-node-id="node-sde3a216t">− $50 fuel</span><span data-node-id="node-t16la0496">—</span></div>
+          <div class="flex justify-between" data-node-id="node-z1659gq3v"><span class="text-[#5A6579]" data-node-id="node-nw7t0jphg">− $25 maintenance</span><span data-node-id="node-go26oo3tt">—</span></div>
+          <div class="flex justify-between" data-node-id="node-v2byet7br"><span class="text-[#5A6579]" data-node-id="node-eznc4t048">− $18 depreciation</span><span data-node-id="node-8m6i94ul1">—</span></div>
+          <div class="flex justify-between" data-node-id="node-vrv9nc0qk"><span class="text-[#5A6579]" data-node-id="node-vf3oek1vj">− $7 insurance</span><span data-node-id="node-3cq1vycto">—</span></div>
+          <div class="flex justify-between border-t border-[#E9ECF2] pt-2 font-bold text-[#2463EB]" data-node-id="node-6ilo0t299"><span data-node-id="node-pfxz3tiog">= $100 estimated real profit</span><span data-node-id="node-0s69oeujj">—</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="text-sm text-[#5A6579] mt-6 italic" data-node-id="node-zylnsji77">"Your vehicle costs money even when you’re not paying for it today."</p>
+  </div>
+</section>
+
+<!-- ========== CALCULATOR ========== -->
+<section id="calculator" class="container py-8 md:py-12 scroll-mt-20" data-node-id="node-1cow2qaiv">
+  <div class="max-w-3xl mx-auto" data-node-id="node-uafkkzppv">
+    <div class="text-center mb-8" data-node-id="node-qlpqckfv1">
+      <h2 data-node-id="node-8y0xsbeb0">Quick calculator</h2>
+      <p class="text-[#5A6579] mt-2" data-node-id="node-yf263zpml">No account needed. Get your real profit in under 60 seconds.</p>
+    </div>
+
+    <!-- Step pills -->
+    <div class="flex flex-wrap gap-2 justify-center mb-8" data-node-id="node-b9kasfbgl">
+      <span class="step-pill active" id="pill1" data-node-id="node-o7s0rl8cv"><i class="fas fa-dollar-sign" data-node-id="node-sir68giws"></i> Earnings</span>
+      <span class="step-pill" id="pill2" data-node-id="node-0n998u615"><i class="fas fa-car" data-node-id="node-8d4va88v6"></i> Vehicle</span>
+      <span class="step-pill" id="pill3" data-node-id="node-yqu89cwlp"><i class="fas fa-road" data-node-id="node-bzeqi0p2d"></i> Miles &amp; Hours</span>
+      <span class="step-pill" id="pill4" data-node-id="node-6zhdr1wj1"><i class="fas fa-wrench" data-node-id="node-szljfdyib"></i> Costs</span>
+      <span class="step-pill" id="pill5" data-node-id="node-d9zipe4l5"><i class="fas fa-chart-simple" data-node-id="node-th4du1fd1"></i> Results</span>
+    </div>
+
+    <!-- STEP 1: Earnings -->
+    <div class="card mb-4" id="step1" data-node-id="node-f29cv77nj">
+      <h3 class="mb-4 flex items-center gap-2" data-node-id="node-nrd9yoyb3"><span class="badge badge-accent" data-node-id="node-gggo6xj5j">Step 1</span> Earnings</h3>
+      <div class="input-group" data-node-id="node-2gxyrtucf">
+        <label class="input-label" for="grossEarnings" data-node-id="node-q3c8s85nq">How much did you make today? (Gross earnings)</label>
+        <div class="relative" data-node-id="node-x69kbu8ab">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[#5A6579]" data-node-id="node-m9okm2ddb">$</span>
+          <input type="number" id="grossEarnings" class="input pl-8" placeholder="200" value="200" step="0.01" min="0" data-node-id="node-4rds46syc">
+        </div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" data-node-id="node-ch5zovx6c">
+        <div class="input-group" data-node-id="node-7x3szpm0n">
+          <label class="input-label" for="tips" data-node-id="node-89fg30nhv">Tips</label>
+          <div class="relative" data-node-id="node-g1j9hscg5">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[#5A6579]" data-node-id="node-btifldn2r">$</span>
+            <input type="number" id="tips" class="input pl-8" placeholder="20" value="20" step="0.01" min="0" data-node-id="node-e663pkbye">
+          </div>
+        </div>
+        <div class="input-group" data-node-id="node-o8yndcwmv">
+          <label class="input-label" for="bonuses" data-node-id="node-fpu6zpfla">Bonuses / promotions</label>
+          <div class="relative" data-node-id="node-dbhbm5398">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[#5A6579]" data-node-id="node-120pv1hxv">$</span>
+            <input type="number" id="bonuses" class="input pl-8" placeholder="0" value="0" step="0.01" min="0" data-node-id="node-rfioprdxy">
+          </div>
+        </div>
+        <div class="input-group" data-node-id="node-l54akbjmb">
+          <label class="input-label" for="otherIncome" data-node-id="node-oifryirv3">Other driving income</label>
+          <div class="relative" data-node-id="node-6bfoqng9w">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[#5A6579]" data-node-id="node-wmrk4gjyu">$</span>
+            <input type="number" id="otherIncome" class="input pl-8" placeholder="0" value="0" step="0.01" min="0" data-node-id="node-e3lg2me2c">
+          </div>
+        </div>
+      </div>
+      <div class="bg-[#EFF4FF] rounded-xl p-3 text-sm flex justify-between items-center mt-2" data-node-id="node-419esgnhd">
+        <span class="font-medium" data-node-id="node-z4q6su2b9">Total gross income</span>
+        <span class="font-bold text-lg" id="totalGrossDisplay" data-node-id="node-eolc1e8iz">$220.00</span>
+      </div>
+    </div>
+
+    <!-- STEP 2: Vehicle -->
+    <div class="card mb-4" id="step2" data-node-id="node-3xcr889l1">
+      <h3 class="mb-4 flex items-center gap-2" data-node-id="node-andlkykjp"><span class="badge badge-accent" data-node-id="node-zr6l4licb">Step 2</span> Vehicle</h3>
+      <p class="text-sm text-[#5A6579] mb-4" data-node-id="node-0i98s9k0k">What vehicle did you drive? Search or select year, make, model, trim.</p>
+      
+      <div class="vehicle-selector-grid" data-node-id="node-xyy8pvmx0">
+        <div class="input-group" data-node-id="node-6xm9lvau5">
+          <label class="input-label" for="vehicleYear" data-node-id="node-q4wjq6vb8">Year</label>
+          <select id="vehicleYear" class="select" data-node-id="node-do434142a">
+            <option value="" data-node-id="node-k7c5pssft">Select year</option>
+            <option value="2023" data-node-id="node-r22pjiq5y">2023</option>
+            <option value="2022" selected="" data-node-id="node-yqnkzzakc">2022</option>
+            <option value="2021" data-node-id="node-sua7ie4i0">2021</option>
+            <option value="2020" data-node-id="node-hpogydiqp">2020</option>
+            <option value="2019" data-node-id="node-sua8h6zjf">2019</option>
+            <option value="2018" data-node-id="node-55u3wt1h3">2018</option>
+          </select>
+        </div>
+        <div class="input-group" data-node-id="node-5j9a5muxd">
+          <label class="input-label" for="vehicleMake" data-node-id="node-cvatbw0pj">Make</label>
+          <select id="vehicleMake" class="select" data-node-id="node-g9bncth5n"><option value="">Select make</option><option value="Toyota" selected="">Toyota</option><option value="Honda">Honda</option><option value="Tesla">Tesla</option><option value="Ford">Ford</option></select>
+        </div>
+        <div class="input-group" data-node-id="node-221t5egrc">
+          <label class="input-label" for="vehicleModel" data-node-id="node-g6z1vigiv">Model</label>
+          <select id="vehicleModel" class="select" data-node-id="node-ojpjwylnv"><option value="">Select model</option><option value="Camry" selected="">Camry</option><option value="Corolla">Corolla</option><option value="RAV4">RAV4</option><option value="Prius">Prius</option></select>
+        </div>
+        <div class="input-group" data-node-id="node-6b9gj3chl">
+          <label class="input-label" for="vehicleTrim" data-node-id="node-rdraeq4ks">Trim / Engine</label>
+          <select id="vehicleTrim" class="select" data-node-id="node-enr2t9g74"><option value="">Select trim</option><option value="LE 2.5L" selected="">LE 2.5L</option><option value="SE 2.5L">SE 2.5L</option><option value="XLE 2.5L">XLE 2.5L</option><option value="Hybrid LE">Hybrid LE</option></select>
+        </div>
+      </div>
+
+      <!-- MPG Display -->
+      <div class="bg-[#F8F9FC] rounded-xl p-4 flex flex-wrap items-center justify-between gap-3 mt-2" data-node-id="node-jr1tfma6g">
+        <div data-node-id="node-g10tehi3q">
+          <div class="text-sm text-[#5A6579] flex items-center gap-1" data-node-id="node-e5say08nj">
+            <i class="fas fa-gas-pump" data-node-id="node-714n4uj8m"></i> Estimated MPG
+          </div>
+          <div class="text-2xl font-bold" id="mpgDisplay" data-node-id="node-hb98ptphg">32</div>
+          <div class="text-xs text-[#5A6579]" id="mpgSource" data-node-id="node-ukuwfrhwg">Source: EPA / FuelEconomy.gov (combined)</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="changeMpgBtn" data-node-id="node-3hnjte709"><i class="fas fa-pen" data-node-id="node-j3z4khvrg"></i> Change MPG</button>
+      </div>
+      <div id="customMpgPanel" class="hidden mt-3 p-3 bg-white border border-[#E9ECF2] rounded-xl" data-node-id="node-5ayy3nui3">
+        <label class="input-label" data-node-id="node-bpce51vvo">My actual MPG</label>
+        <div class="flex gap-2" data-node-id="node-ve0tiibgd">
+          <input type="number" id="customMpgInput" class="input" placeholder="e.g. 27" step="0.1" min="1" data-node-id="node-t00yvy40w">
+          <button class="btn btn-primary btn-sm" id="saveCustomMpg" data-node-id="node-tazxb89mt">Save</button>
+          <button class="btn btn-secondary btn-sm" id="resetMpg" data-node-id="node-ept1popwc">Reset</button>
+        </div>
+        <p class="text-xs text-[#5A6579] mt-2" id="mpgOverrideNote" data-node-id="node-mgyyhri6a"></p>
+      </div>
+
+      <!-- Fuel / Charging -->
+      <div class="mt-5" data-node-id="node-vkgdisn57">
+        <h4 class="font-semibold mb-2 text-sm" data-node-id="node-oquvj3chs">Fuel / Charging</h4>
+        <div class="flex gap-2 mb-3" data-node-id="node-fj3onp4xg">
+          <button class="btn btn-sm btn-secondary fuel-method active" data-method="spent" data-node-id="node-2ugci2lvy">Enter fuel spent</button>
+          <button class="btn btn-sm btn-secondary fuel-method" data-method="calculate" data-node-id="node-40u8xrvb0">Calculate from miles</button>
+        </div>
+        <div id="fuelSpentPanel" data-node-id="node-0228ucgvv">
+          <div class="input-group" data-node-id="node-j0t0s5qdj">
+            <label class="input-label" for="fuelSpent" data-node-id="node-pc2no3m1h">Fuel spent today</label>
+            <div class="relative" data-node-id="node-3ua265jqv">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[#5A6579]" data-node-id="node-ksaevhivc">$</span>
+              <input type="number" id="fuelSpent" class="input pl-8" placeholder="50" value="50" step="0.01" min="0" data-node-id="node-2aoi2lohf">
+            </div>
+          </div>
+        </div>
+        <div id="fuelCalcPanel" class="hidden" data-node-id="node-cf7h70y52">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" data-node-id="node-5zedj86sm">
+            <div class="input-group" data-node-id="node-chmj6lou2">
+              <label class="input-label" for="milesForFuel" data-node-id="node-qijdsxfqo">Miles driven today</label>
+              <input type="number" id="milesForFuel" class="input" placeholder="250" value="250" min="0" data-node-id="node-ksqyrqzkw">
+            </div>
+            <div class="input-group" data-node-id="node-inwae8nad">
+              <label class="input-label" for="gasPrice" data-node-id="node-hatvs9hvp">Current gas price ($/gal)</label>
+              <input type="number" id="gasPrice" class="input" placeholder="3.50" value="3.50" step="0.01" min="0" data-node-id="node-ynnhz07pa">
+            </div>
+          </div>
+          <div class="bg-[#EFF4FF] rounded-xl p-3 text-sm" id="fuelCalcResult" data-node-id="node-nwa5cg9pp">Gallons used: 7.8 gal — Fuel cost: $27.34</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Miles & Hours -->
+    <div class="card mb-4" id="step3" data-node-id="node-yldmxd877">
+      <h3 class="mb-4 flex items-center gap-2" data-node-id="node-1s4vkrigu"><span class="badge badge-accent" data-node-id="node-82zk3ficm">Step 3</span> Miles &amp; Hours</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" data-node-id="node-t79wp2tkg">
+        <div class="input-group" data-node-id="node-c45cettnz">
+          <label class="input-label" for="milesDriven" data-node-id="node-fmii3d26r">How many miles did you drive today?</label>
+          <input type="number" id="milesDriven" class="input" placeholder="250" value="250" min="0" data-node-id="node-hxn5t0k2d">
+        </div>
+        <div class="input-group" data-node-id="node-e5ozecxvi">
+          <label class="input-label" for="hoursDriven" data-node-id="node-nb8fa8yhr">How many hours did you drive?</label>
+          <input type="number" id="hoursDriven" class="input" placeholder="10" value="10" min="0" step="0.5" data-node-id="node-79nmpti3d">
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4: Vehicle Costs -->
+    <div class="card mb-4" id="step4" data-node-id="node-vkbnne0h5">
+      <h3 class="mb-4 flex items-center gap-2" data-node-id="node-wvlsgf9of"><span class="badge badge-accent" data-node-id="node-rydbeiyd9">Step 4</span> Vehicle Costs</h3>
+      
+      <!-- Maintenance -->
+      <div class="mb-4 p-4 bg-[#F8F9FC] rounded-xl" data-node-id="node-mmk890yck">
+        <div class="flex items-center justify-between mb-2" data-node-id="node-zq1r1bmor">
+          <span class="font-semibold text-sm" data-node-id="node-fllk0sqrn">Maintenance reserve</span>
+          <span class="text-xs text-[#5A6579]" data-node-id="node-mx034i4ed">Estimated reserve, not paid today</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-3" data-node-id="node-tdlcs7730">
+          <div class="flex items-center gap-2" data-node-id="node-j70j1u9tn">
+            <input type="number" id="maintenanceRate" class="input w-24" value="0.10" step="0.01" min="0" data-node-id="node-01car0gwv">
+            <span class="text-sm text-[#5A6579]" data-node-id="node-svu8jngeu">/mile</span>
+          </div>
+          <span class="text-xs text-[#5A6579]" data-node-id="node-pnrsernq4">Default: $0.10/mi (oil, tires, brakes, repairs)</span>
+        </div>
+        <div class="text-sm mt-2 font-medium" id="maintenanceTotal" data-node-id="node-gzesbcg77">= $25.00</div>
+      </div>
+
+      <!-- Depreciation -->
+      <div class="mb-4 p-4 bg-[#F8F9FC] rounded-xl" data-node-id="node-a3yqkfvl7">
+        <div class="font-semibold text-sm mb-2" data-node-id="node-tb4ftwpfw">Estimated economic depreciation</div>
+        <p class="text-xs text-[#5A6579] mb-3" data-node-id="node-s2xc5h10d">This estimates the economic cost of adding mileage. Actual depreciation varies.</p>
+        <div class="grid grid-cols-2 gap-3" data-node-id="node-frp2c6ko7">
+          <div data-node-id="node-fhw9wwc4q">
+            <label class="input-label" data-node-id="node-7yc3afnjq">Purchase price</label>
+            <input type="number" id="purchasePrice" class="input" value="28000" step="500" data-node-id="node-26l2jzaf8">
+          </div>
+          <div data-node-id="node-70b6bug3p">
+            <label class="input-label" data-node-id="node-of7a4krlg">Current value</label>
+            <input type="number" id="currentValue" class="input" value="18000" step="500" data-node-id="node-trzr8ks42">
+          </div>
+          <div data-node-id="node-pyb8icrh6">
+            <label class="input-label" data-node-id="node-x0en7t9vr">Current odometer</label>
+            <input type="number" id="currentOdometer" class="input" value="45000" step="1000" data-node-id="node-q7ggcvhj1">
+          </div>
+          <div data-node-id="node-682iocx9g">
+            <label class="input-label" data-node-id="node-b5i0d4p0x">Expected replacement mileage</label>
+            <input type="number" id="replacementMileage" class="input" value="200000" step="10000" data-node-id="node-gi4vlsx0w">
+          </div>
+        </div>
+        <div class="text-sm mt-3 font-medium" id="depreciationTotal" data-node-id="node-j1jd8yex9">= $16.13</div>
+      </div>
+
+      <!-- Insurance & Registration -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4" data-node-id="node-4mgn9tf1n">
+        <div class="p-4 bg-[#F8F9FC] rounded-xl" data-node-id="node-fjo1hsp8e">
+          <div class="font-semibold text-sm mb-2" data-node-id="node-0yy79neb1">Insurance</div>
+          <div class="input-group" data-node-id="node-toiu84trr">
+            <label class="input-label" data-node-id="node-rqiw4kh4b">Monthly insurance cost</label>
+            <input type="number" id="monthlyInsurance" class="input" value="180" step="10" data-node-id="node-k5v1seka3">
+          </div>
+          <div class="input-group" data-node-id="node-6zgmiyzuk">
+            <label class="input-label" data-node-id="node-re4po2ftu">Days per month you drive</label>
+            <input type="number" id="daysPerMonth" class="input" value="25" step="1" min="1" data-node-id="node-aad0je1xf">
+          </div>
+          <div class="text-sm font-medium" id="insuranceDaily" data-node-id="node-7qwxrzwj5">= $7.20/day</div>
+        </div>
+        <div class="p-4 bg-[#F8F9FC] rounded-xl" data-node-id="node-0mbh6mrwz">
+          <div class="font-semibold text-sm mb-2" data-node-id="node-8acbbmziy">Registration &amp; fees</div>
+          <div class="input-group" data-node-id="node-jm3b3l5f4">
+            <label class="input-label" data-node-id="node-hv35reot3">Annual registration / vehicle fees</label>
+            <input type="number" id="annualRegistration" class="input" value="300" step="10" data-node-id="node-17wpi4apb">
+          </div>
+          <div class="text-sm font-medium mt-2" id="registrationDaily" data-node-id="node-rhtgtrruo">= $0.68/day</div>
+        </div>
+      </div>
+
+      <!-- Other expenses -->
+      <div class="p-4 bg-[#F8F9FC] rounded-xl" data-node-id="node-el4zvo48w">
+        <div class="font-semibold text-sm mb-2" data-node-id="node-jazj5t9u9">Other daily expenses</div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" data-node-id="node-a5gseiiju">
+          <div data-node-id="node-ci4exz1ux"><label class="input-label" data-node-id="node-wzte60l4y">Tolls</label><input type="number" id="tolls" class="input" value="0" step="0.01" min="0" data-node-id="node-gl53ra604"></div>
+          <div data-node-id="node-yvdzt2dyx"><label class="input-label" data-node-id="node-x1in5mpg2">Parking</label><input type="number" id="parking" class="input" value="0" step="0.01" min="0" data-node-id="node-sqx4cyk3a"></div>
+          <div data-node-id="node-w1vtb504d"><label class="input-label" data-node-id="node-y2w6un48q">Car wash</label><input type="number" id="carWash" class="input" value="0" step="0.01" min="0" data-node-id="node-iqs6mijlg"></div>
+          <div data-node-id="node-zs7cpy6jp"><label class="input-label" data-node-id="node-mwxuon77q">Phone expense</label><input type="number" id="phoneCost" class="input" value="0" step="0.01" min="0" data-node-id="node-cfti1ugcl"></div>
+        </div>
+        <div class="mt-2" data-node-id="node-ka46olma5"><label class="input-label" data-node-id="node-skh4a9bsu">Other driving expenses</label><input type="number" id="otherExpenses" class="input" value="0" step="0.01" min="0" data-node-id="node-e1du5mzk7"></div>
+      </div>
+    </div>
+
+    <!-- Calculate Button -->
+    <button class="btn btn-primary w-full py-4 text-lg mb-8" id="calculateBtn" data-node-id="node-w9p1ezoyw">
+      <i class="fas fa-calculator" data-node-id="node-hdltdlfe2"></i> Calculate My Real Profit
+    </button>
+
+    <!-- ========== RESULTS ========== -->
+    <div id="resultsSection" class="hidden" data-node-id="node-9x8ks87gp">
+      <div class="card bg-gradient-to-br from-white to-[#F8F9FC] border-[#2463EB]/20 mb-6" data-node-id="node-cpz84e1j9">
+        <div class="text-center" data-node-id="node-ey7c3n4g9">
+          <div class="text-sm font-semibold text-[#5A6579] uppercase tracking-wider" data-node-id="node-mjrv42psa">Your Real Profit Today</div>
+          <div class="profit-hero text-[#2463EB] mt-2" id="realProfitHero" data-node-id="node-nzmk9q5qe">$124.50</div>
+          <div class="text-sm text-[#5A6579] mt-1" data-node-id="node-yjkdplu8d">Estimated profit after vehicle-related costs</div>
+        </div>
+        <div class="divider" data-node-id="node-tdenpqjm9"></div>
+        <div class="grid grid-cols-2 gap-y-2 text-sm" data-node-id="node-vincsq7it">
+          <div class="flex justify-between col-span-2" data-node-id="node-y125mw8bz"><span data-node-id="node-gej8qb4xn">Gross income</span><span id="resGross" class="font-medium" data-node-id="node-ekjlxpdqa">$220.00</span></div>
+          <div class="flex justify-between col-span-2" data-node-id="node-4572edkoq"><span data-node-id="node-d8pxe1sik">Fuel</span><span id="resFuel" class="text-red-600" data-node-id="node-sm4xw1xus">−$50.00</span></div>
+          <div class="flex justify-between col-span-2" data-node-id="node-o7gmpzmkx"><span data-node-id="node-c0qu5vs43">Maintenance reserve</span><span id="resMaintenance" class="text-red-600" data-node-id="node-1hot01v82">−$25.00</span></div>
+          <div class="flex justify-between col-span-2" data-node-id="node-mklrk4l3t"><span data-node-id="node-q2gb9e50v">Depreciation</span><span id="resDepreciation" class="text-red-600" data-node-id="node-7hasfmaos">−$18.00</span></div>
+          <div class="flex justify-between col-span-2" data-node-id="node-fiff6gt6v"><span data-node-id="node-1tzqnq7ph">Insurance</span><span id="resInsurance" class="text-red-600" data-node-id="node-fv9vv8m8e">−$7.20</span></div>
+          <div class="flex justify-between col-span-2" data-node-id="node-i78f78p1v"><span data-node-id="node-5j173hxq8">Registration</span><span id="resRegistration" class="text-red-600" data-node-id="node-1cuba0vb9">−$0.99</span></div>
+          <div class="flex justify-between col-span-2" data-node-id="node-t3xrf8ovv"><span data-node-id="node-af4sto0uu">Other expenses</span><span id="resOther" class="text-red-600" data-node-id="node-4sg9wdv99">−$0.00</span></div>
+          <div class="flex justify-between col-span-2 border-t border-[#E9ECF2] pt-2 font-bold" data-node-id="node-s2s26lpmt"><span data-node-id="node-1cba8oabp">Total estimated costs</span><span id="resTotalCosts" data-node-id="node-stvquk6g7">$101.19</span></div>
+          <div class="flex justify-between col-span-2 font-bold text-[#2463EB] text-lg" data-node-id="node-md6i4isxs"><span data-node-id="node-31bwbr4gt">REAL PROFIT</span><span id="resRealProfit" data-node-id="node-macmp34qh">$118.81</span></div>
+        </div>
+      </div>
+
+      <!-- Gross vs Real -->
+      <div class="card mb-6" data-node-id="node-44k3jfk69">
+        <h3 class="mb-4" data-node-id="node-5wzurgex1">Gross vs Real Profit</h3>
+        <div class="grid grid-cols-3 gap-4 text-center" data-node-id="node-zega448un">
+          <div class="bg-[#F8F9FC] rounded-xl p-4" data-node-id="node-zgzkfetmb">
+            <div class="text-xs text-[#5A6579] mb-1" data-node-id="node-6meeuw7ck">What you might think you made</div>
+            <div class="text-2xl font-bold" id="grossVsThink" data-node-id="node-2zipvwvj2">$220</div>
+          </div>
+          <div class="bg-[#EFF4FF] rounded-xl p-4 border border-[#2463EB]/30" data-node-id="node-sybu0mo37">
+            <div class="text-xs text-[#5A6579] mb-1" data-node-id="node-yh01ejdfc">What you actually kept</div>
+            <div class="text-2xl font-bold text-[#2463EB]" id="grossVsKeep" data-node-id="node-miho7qmc2">$124</div>
+          </div>
+          <div class="bg-[#F8F9FC] rounded-xl p-4" data-node-id="node-cqv0cxo7e">
+            <div class="text-xs text-[#5A6579] mb-1" data-node-id="node-9iukewl5z">Vehicle/business costs</div>
+            <div class="text-2xl font-bold text-[#B45309]" id="grossVsCosts" data-node-id="node-j4xvmgpdy">$96</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metrics -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6" data-node-id="node-mtba6g51y">
+        <div class="card-flat text-center" data-node-id="node-xj75ksfk7"><div class="text-xs text-[#5A6579]" data-node-id="node-3eevid7bf">Real profit/hour</div><div class="text-xl font-bold" id="metricProfitHour" data-node-id="node-b1phdeav0">$12.40/hr</div></div>
+        <div class="card-flat text-center" data-node-id="node-kp44xqv5u"><div class="text-xs text-[#5A6579]" data-node-id="node-h21hfonl3">Real profit/mile</div><div class="text-xl font-bold" id="metricProfitMile" data-node-id="node-z7g15pnxe">$0.50/mi</div></div>
+        <div class="card-flat text-center" data-node-id="node-vi0aildxm"><div class="text-xs text-[#5A6579]" data-node-id="node-duc6oq6lt">Total cost/mile</div><div class="text-xl font-bold" id="metricCostMile" data-node-id="node-yso2zwqy0">$0.39/mi</div></div>
+        <div class="card-flat text-center" data-node-id="node-663ds7txg"><div class="text-xs text-[#5A6579]" data-node-id="node-7w8c9feri">Gross earnings/hour</div><div class="text-xl font-bold" id="metricGrossHour" data-node-id="node-2fp5gcs0f">$22/hr</div></div>
+      </div>
+
+      <!-- Cost Breakdown -->
+      <div class="card mb-6" data-node-id="node-xj3xgkvn4">
+        <h3 class="mb-4" data-node-id="node-1supt8pg1">Cost breakdown</h3>
+        <div class="bar-chart" id="costBreakdownChart" data-node-id="node-70kvkzjvt">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <!-- Save / Account -->
+      <div class="card text-center bg-[#EFF4FF] border-[#2463EB]/20" data-node-id="node-kxar4hj0k">
+        <p class="font-medium mb-2" data-node-id="node-epfxzyh2a">Want to save this result?</p>
+        <p class="text-sm text-[#5A6579] mb-4" data-node-id="node-ymjdld39a">Create a free account to save your vehicle, track daily history, and see weekly &amp; monthly dashboards.</p>
+        <div class="flex gap-3 justify-center" data-node-id="node-2cw3qdn7n">
+          <button class="btn btn-primary" id="saveResultBtn" data-node-id="node-i794l93he"><i class="fas fa-bookmark" data-node-id="node-toi7s5s1p"></i> Save this vehicle</button>
+          <button class="btn btn-secondary" id="saveRecordBtn" data-node-id="node-87jber1vn"><i class="fas fa-clock-rotate-left" data-node-id="node-48r248v8k"></i> Save to history</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== DASHBOARD (HISTORY) ========== -->
+<section id="dashboard" class="container py-12 scroll-mt-20" data-node-id="node-ny8oaf777">
+  <div class="max-w-4xl mx-auto" data-node-id="node-phojoh37y">
+    <h2 class="text-center mb-2" data-node-id="node-lod9ctcr4">Weekly &amp; Monthly Dashboard</h2>
+    <p class="text-center text-[#5A6579] mb-8" data-node-id="node-74oaw95qt">Track your real profit over time.</p>
+    <div class="grid md:grid-cols-3 gap-4 mb-8" data-node-id="node-cplj7psdl">
+      <div class="card text-center" data-node-id="node-co3kqoe8x"><div class="text-sm text-[#5A6579]" data-node-id="node-cmq3595g6">Today</div><div class="text-2xl font-bold" id="dashTodayProfit" data-node-id="node-9hheis7ur">$0.00</div><div class="text-xs text-[#5A6579]" data-node-id="node-ruka23qhe">Real profit</div></div>
+      <div class="card text-center" data-node-id="node-7r8aivsuq"><div class="text-sm text-[#5A6579]" data-node-id="node-nz9pt9hiw">This Week</div><div class="text-2xl font-bold" id="dashWeekProfit" data-node-id="node-bc1nw7c20">$0.00</div><div class="text-xs text-[#5A6579]" data-node-id="node-f4j6pwbz7">Real profit</div></div>
+      <div class="card text-center" data-node-id="node-azadam2x8"><div class="text-sm text-[#5A6579]" data-node-id="node-pyi7flhx7">This Month</div><div class="text-2xl font-bold" id="dashMonthProfit" data-node-id="node-wj64rtvte">$0.00</div><div class="text-xs text-[#5A6579]" data-node-id="node-fntyrhx7t">Real profit</div></div>
+    </div>
+    <div class="card" data-node-id="node-q3iphaiux">
+      <div class="flex justify-between items-center mb-4" data-node-id="node-4dk0ymejd">
+        <h3 data-node-id="node-94m19gm28">Daily History</h3>
+        <button class="btn btn-ghost btn-sm" id="clearHistoryBtn" data-node-id="node-qhrtug0qq"><i class="fas fa-trash-can" data-node-id="node-f37fn5cly"></i> Clear</button>
+      </div>
+      <div id="historyList" class="space-y-3" data-node-id="node-8yi93k4xi"><p class="text-sm text-[#5A6579]">No saved calculations yet. Calculate and save your first day.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== BREAK-EVEN / TARGET TOOLS ========== -->
+<section id="break-even" class="container py-12 scroll-mt-20" data-node-id="node-62wwaktkz">
+  <div class="max-w-3xl mx-auto" data-node-id="node-g6ex88pbp">
+    <h2 class="text-center mb-2" data-node-id="node-5lmezyoni">How much do I need to earn?</h2>
+    <p class="text-center text-[#5A6579] mb-8" data-node-id="node-6svnmcx25">Break-even and daily target calculator based on your costs.</p>
+    <div class="card mb-6" data-node-id="node-33bysm1uw">
+      <div class="grid sm:grid-cols-3 gap-3 mb-4" data-node-id="node-vme0728ub">
+        <div data-node-id="node-ryacxfgk0"><label class="input-label" data-node-id="node-0psdr0ksy">Desired real profit</label><input type="number" id="targetProfit" class="input" value="200" step="10" data-node-id="node-bjv3hur0i"></div>
+        <div data-node-id="node-k7o59n9o9"><label class="input-label" data-node-id="node-6yx14sls4">Expected miles</label><input type="number" id="targetMiles" class="input" value="250" step="10" data-node-id="node-8jdfwksua"></div>
+        <div data-node-id="node-xroj5qaf4"><label class="input-label" data-node-id="node-m73le06bx">Expected hours</label><input type="number" id="targetHours" class="input" value="10" step="0.5" data-node-id="node-zn2g1e0v8"></div>
+      </div>
+      <button class="btn btn-primary w-full" id="calcBreakEven" data-node-id="node-07wu0qmr4">Calculate Required Gross</button>
+      <div class="mt-4 bg-[#F8F9FC] rounded-xl p-4 hidden" id="breakEvenResult" data-node-id="node-bjuqjc3gv">
+        <div class="flex justify-between py-1" data-node-id="node-j92sgzm1t"><span data-node-id="node-yswwavm6a">Estimated vehicle costs</span><span id="beCosts" data-node-id="node-cdtbev82i">$95</span></div>
+        <div class="flex justify-between py-1" data-node-id="node-7jebdle7h"><span data-node-id="node-2uwfbfckd">Desired real profit</span><span id="beDesired" data-node-id="node-ftytd8d0z">$200</span></div>
+        <div class="flex justify-between py-1 border-t border-[#E9ECF2] mt-1 pt-1 font-bold" data-node-id="node-s0bk8mkz8"><span data-node-id="node-6e17urb1z">Required gross earnings</span><span id="beGross" data-node-id="node-20n8cf6ao">$295</span></div>
+        <div class="flex justify-between py-1 font-bold text-[#2463EB]" data-node-id="node-jv75siysd"><span data-node-id="node-aarqt2f5t">Required gross/hour</span><span id="beGrossHour" data-node-id="node-02rnos2k6">$29.50/hr</span></div>
+      </div>
+    </div>
+    <p class="text-xs text-[#5A6579] text-center" data-node-id="node-7hps9cnkp">This is a mathematical estimate based on your assumptions and does not guarantee future earnings.</p>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="border-t border-[#E9ECF2] bg-white mt-12" data-node-id="node-pyujc7dcz">
+  <div class="container py-10" data-node-id="node-jscnz7bwe">
+    <div class="grid md:grid-cols-4 gap-8" data-node-id="node-2xci07yks">
+      <div data-node-id="node-7xznv807l">
+        <div class="flex items-center gap-2 mb-3" data-node-id="node-67p5dfgs1">
+          <i class="fas fa-car-side text-[#2463EB]" data-node-id="node-1z2tf3a2o"></i>
+          <span class="font-display font-extrabold text-lg" data-node-id="node-5uo33o6vu">TrueDrive<span class="text-[#2463EB]" data-node-id="node-90yv2y3fo">Profit</span></span>
+        </div>
+        <p class="text-sm text-[#5A6579]" data-node-id="node-vw1iosh1b">See what you really made after all vehicle costs.</p>
+      </div>
+      <div data-node-id="node-d868a3eji">
+        <h4 class="font-semibold text-sm mb-3" data-node-id="node-qfvd8er0z">Calculators</h4>
+        <ul class="space-y-2 text-sm text-[#5A6579]" data-node-id="node-4r4gr6xt5">
+          <li data-node-id="node-8x0o0qyyf"><a href="/uber-profit-calculator" class="hover:text-[#2463EB]" data-node-id="node-ivlqg6j1w">Uber Profit Calculator</a></li>
+          <li data-node-id="node-aw2h7hv0v"><a href="/lyft-profit-calculator" class="hover:text-[#2463EB]" data-node-id="node-427dchcu5">Lyft Profit Calculator</a></li>
+          <li data-node-id="node-qlo0nwx2i"><a href="/doordash-profit-calculator" class="hover:text-[#2463EB]" data-node-id="node-gczyno47m">DoorDash Profit Calculator</a></li>
+          <li data-node-id="node-n3ace000k"><a href="/gig-driver-profit-calculator" class="hover:text-[#2463EB]" data-node-id="node-2vxzh0ima">Gig Driver Profit Calculator</a></li>
+        </ul>
+      </div>
+      <div data-node-id="node-gptzvroga">
+        <h4 class="font-semibold text-sm mb-3" data-node-id="node-yplos9pup">Resources</h4>
+        <ul class="space-y-2 text-sm text-[#5A6579]" data-node-id="node-3ni8vmdk8">
+          <li data-node-id="node-1nt9x17ls"><a href="/true-cost-of-driving" class="hover:text-[#2463EB]" data-node-id="node-klqkpjjzw">True Cost of Driving</a></li>
+          <li data-node-id="node-rmgytshmf"><a href="/uber-expense-calculator" class="hover:text-[#2463EB]" data-node-id="node-xjznxgf9k">Uber Expense Calculator</a></li>
+          <li data-node-id="node-x1u3h93pi"><a href="/food-delivery-profit-calculator" class="hover:text-[#2463EB]" data-node-id="node-sn5sbnttf">Food Delivery Profit</a></li>
+        </ul>
+      </div>
+      <div data-node-id="node-ba7m4uub2">
+        <h4 class="font-semibold text-sm mb-3" data-node-id="node-fq45j5gco">Disclaimer</h4>
+        <p class="text-xs text-[#5A6579] leading-relaxed" data-node-id="node-r32mhwmr1">TrueDrive Profit provides estimates for informational purposes only. Actual vehicle costs, depreciation, insurance costs, fuel efficiency and other expenses vary. This tool is not financial, accounting or tax advice.</p>
+      </div>
+    </div>
+    <div class="divider" data-node-id="node-xnw29bugz"></div>
+    <p class="text-xs text-[#5A6579] text-center" data-node-id="node-c68rm3aa4">© 2025 TrueDrive Profit. Built for US gig drivers.</p>
+  </div>
+</footer>
+
+<script data-node-id="node-e1d8n44ac">
+  // ============================================================
+  // STATE & HELPERS
+  // ============================================================
+  const state = {
+    mpg: 32,
+    mpgSource: 'EPA / FuelEconomy.gov (combined)',
+    customMpg: null,
+    fuelMethod: 'spent',
+    vehicle: { year: '2022', make: 'Toyota', model: 'Camry', trim: 'LE 2.5L' },
+    isEV: false,
+    history: JSON.parse(localStorage.getItem('td_history') || '[]'),
+    savedVehicle: JSON.parse(localStorage.getItem('td_vehicle') || 'null'),
+  };
+
+  function fmt(n, dec = 2) { return '$' + Number(n).toFixed(dec); }
+  function safeDiv(a, b) { return b > 0 ? a / b : 0; }
+
+  function updateTotalGross() {
+    const g = parseFloat(document.getElementById('grossEarnings').value) || 0;
+    const t = parseFloat(document.getElementById('tips').value) || 0;
+    const b = parseFloat(document.getElementById('bonuses').value) || 0;
+    const o = parseFloat(document.getElementById('otherIncome').value) || 0;
+    const total = g + t + b + o;
+    document.getElementById('totalGrossDisplay').textContent = fmt(total);
+    return total;
+  }
+
+  // ============================================================
+  // VEHICLE SELECTOR ARCHITECTURE (mock EPA database)
+  // ============================================================
+  const vehicleDB = {
+    'Toyota': {
+      'Camry': { trims: ['LE 2.5L', 'SE 2.5L', 'XLE 2.5L', 'Hybrid LE'], mpg: { 'LE 2.5L': 32, 'SE 2.5L': 31, 'XLE 2.5L': 30, 'Hybrid LE': 52 } },
+      'Corolla': { trims: ['L 1.8L', 'LE 1.8L', 'SE 1.8L', 'Hybrid LE'], mpg: { 'L 1.8L': 34, 'LE 1.8L': 34, 'SE 1.8L': 33, 'Hybrid LE': 52 } },
+      'RAV4': { trims: ['LE 2.5L', 'XLE 2.5L', 'Hybrid LE', 'Prime SE'], mpg: { 'LE 2.5L': 30, 'XLE 2.5L': 29, 'Hybrid LE': 40, 'Prime SE': 38 } },
+      'Prius': { trims: ['L Eco', 'LE', 'XLE', 'Limited'], mpg: { 'L Eco': 56, 'LE': 52, 'XLE': 52, 'Limited': 52 } },
+    },
+    'Honda': {
+      'Civic': { trims: ['LX 2.0L', 'Sport 2.0L', 'EX 1.5T'], mpg: { 'LX 2.0L': 33, 'Sport 2.0L': 30, 'EX 1.5T': 36 } },
+      'Accord': { trims: ['LX 1.5T', 'Sport 1.5T', 'EX-L 1.5T', 'Hybrid'], mpg: { 'LX 1.5T': 32, 'Sport 1.5T': 31, 'EX-L 1.5T': 32, 'Hybrid': 48 } },
+      'CR-V': { trims: ['LX 1.5T', 'EX 1.5T', 'Hybrid LX'], mpg: { 'LX 1.5T': 30, 'EX 1.5T': 29, 'Hybrid LX': 40 } },
+    },
+    'Tesla': {
+      'Model 3': { trims: ['RWD', 'Long Range', 'Performance'], mpg: null, ev: { 'RWD': 132, 'Long Range': 134, 'Performance': 118 } },
+      'Model Y': { trims: ['RWD', 'Long Range', 'Performance'], mpg: null, ev: { 'RWD': 129, 'Long Range': 122, 'Performance': 112 } },
+    },
+    'Ford': {
+      'F-150': { trims: ['XL 3.3L', 'XLT 2.7L', 'Lariat 5.0L', 'Lightning'], mpg: { 'XL 3.3L': 20, 'XLT 2.7L': 22, 'Lariat 5.0L': 19, 'Lightning': 70 } },
+      'Escape': { trims: ['S 1.5L', 'SE 1.5L', 'Titanium 2.0L', 'Hybrid'], mpg: { 'S 1.5L': 30, 'SE 1.5L': 30, 'Titanium 2.0L': 28, 'Hybrid': 41 } },
+    },
+  };
+
+  function populateMakes() {
+    const makeSelect = document.getElementById('vehicleMake');
+    const makes = Object.keys(vehicleDB);
+    makeSelect.innerHTML = '<option value="">Select make</option>' + makes.map(m => `<option value="${m}" ${m === state.vehicle.make ? 'selected' : ''}>${m}</option>`).join('');
+    populateModels();
+  }
+
+  function populateModels() {
+    const make = document.getElementById('vehicleMake').value;
+    const modelSelect = document.getElementById('vehicleModel');
+    if (!make || !vehicleDB[make]) {
+      modelSelect.innerHTML = '<option value="">Select model</option>';
+      document.getElementById('vehicleTrim').innerHTML = '<option value="">Select trim</option>';
+      return;
+    }
+    const models = Object.keys(vehicleDB[make]);
+    modelSelect.innerHTML = '<option value="">Select model</option>' + models.map(m => `<option value="${m}" ${m === state.vehicle.model ? 'selected' : ''}>${m}</option>`).join('');
+    populateTrims();
+  }
+
+  function populateTrims() {
+    const make = document.getElementById('vehicleMake').value;
+    const model = document.getElementById('vehicleModel').value;
+    const trimSelect = document.getElementById('vehicleTrim');
+    if (!make || !model || !vehicleDB[make]?.[model]) {
+      trimSelect.innerHTML = '<option value="">Select trim</option>';
+      return;
+    }
+    const trims = vehicleDB[make][model].trims;
+    trimSelect.innerHTML = '<option value="">Select trim</option>' + trims.map(t => `<option value="${t}" ${t === state.vehicle.trim ? 'selected' : ''}>${t}</option>`).join('');
+    updateMPGFromVehicle();
+  }
+
+  function updateMPGFromVehicle() {
+    const make = document.getElementById('vehicleMake').value;
+    const model = document.getElementById('vehicleModel').value;
+    const trim = document.getElementById('vehicleTrim').value;
+    if (!make || !model) return;
+    const data = vehicleDB[make]?.[model];
+    if (!data) return;
+
+    if (data.ev) {
+      // EV mode
+      state.isEV = true;
+      state.mpg = null;
+      const eff = data.ev[trim] || data.ev[Object.keys(data.ev)[0]];
+      document.getElementById('mpgDisplay').textContent = eff + ' kWh/100mi';
+      document.getElementById('mpgSource').textContent = 'Source: EPA / FuelEconomy.gov (electric)';
+      document.getElementById('fuelSpentPanel').classList.add('hidden');
+      document.getElementById('fuelCalcPanel').classList.remove('hidden');
+      // Adjust labels for EV
+      document.querySelector('#fuelCalcPanel .input-group:nth-child(1) .input-label').textContent = 'Miles driven today';
+      document.querySelector('#fuelCalcPanel .input-group:nth-child(2) .input-label').textContent = 'Electricity price ($/kWh)';
+    } else {
+      state.isEV = false;
+      const mpg = data.mpg[trim] || data.mpg[Object.keys(data.mpg)[0]] || 30;
+      state.mpg = mpg;
+      document.getElementById('mpgDisplay').textContent = mpg;
+      document.getElementById('mpgSource').textContent = 'Source: EPA / FuelEconomy.gov (combined)';
+      document.getElementById('fuelSpentPanel').classList.remove('hidden');
+      document.getElementById('fuelCalcPanel').classList.add('hidden');
+    }
+    if (state.customMpg) {
+      document.getElementById('mpgDisplay').textContent = state.customMpg;
+      document.getElementById('mpgSource').textContent = 'Using your custom MPG';
+    }
+  }
+
+  // ============================================================
+  // FUEL CALCULATION
+  // ============================================================
+  function updateFuelCalc() {
+    const miles = parseFloat(document.getElementById('milesForFuel').value) || 0;
+    const price = parseFloat(document.getElementById('gasPrice').value) || 0;
+    const mpg = state.customMpg || state.mpg || 30;
+    if (state.isEV) {
+      const kwhPer100 = parseFloat(document.getElementById('mpgDisplay').textContent) || 30;
+      const kwh = (miles / 100) * kwhPer100;
+      const cost = kwh * price;
+      document.getElementById('fuelCalcResult').textContent = `Energy used: ${kwh.toFixed(1)} kWh — Charging cost: ${fmt(cost)}`;
+      return cost;
+    } else {
+      const gallons = safeDiv(miles, mpg);
+      const cost = gallons * price;
+      document.getElementById('fuelCalcResult').textContent = `Gallons used: ${gallons.toFixed(1)} gal — Fuel cost: ${fmt(cost)}`;
+      return cost;
+    }
+  }
+
+  // ============================================================
+  // MAIN CALCULATION
+  // ============================================================
+  function calculateAll() {
+    const gross = parseFloat(document.getElementById('grossEarnings').value) || 0;
+    const tips = parseFloat(document.getElementById('tips').value) || 0;
+    const bonuses = parseFloat(document.getElementById('bonuses').value) || 0;
+    const otherIncome = parseFloat(document.getElementById('otherIncome').value) || 0;
+    const totalGross = gross + tips + bonuses + otherIncome;
+
+    const miles = parseFloat(document.getElementById('milesDriven').value) || 0;
+    const hours = parseFloat(document.getElementById('hoursDriven').value) || 0;
+
+    // Fuel
+    let fuelCost = 0;
+    if (state.fuelMethod === 'spent') {
+      fuelCost = parseFloat(document.getElementById('fuelSpent').value) || 0;
+    } else {
+      const m = parseFloat(document.getElementById('milesForFuel').value) || 0;
+      const p = parseFloat(document.getElementById('gasPrice').value) || 0;
+      if (state.isEV) {
+        const kwhPer100 = parseFloat(document.getElementById('mpgDisplay').textContent) || 30;
+        const kwh = (m / 100) * kwhPer100;
+        fuelCost = kwh * p;
+      } else {
+        const mpg = state.customMpg || state.mpg || 30;
+        fuelCost = safeDiv(m, mpg) * p;
+      }
+    }
+
+    // Maintenance
+    const maintRate = parseFloat(document.getElementById('maintenanceRate').value) || 0.10;
+    const maintenance = miles * maintRate;
+
+    // Depreciation
+    const purchase = parseFloat(document.getElementById('purchasePrice').value) || 28000;
+    const currentVal = parseFloat(document.getElementById('currentValue').value) || 18000;
+    const odometer = parseFloat(document.getElementById('currentOdometer').value) || 45000;
+    const replacement = parseFloat(document.getElementById('replacementMileage').value) || 200000;
+    const remainingMiles = Math.max(replacement - odometer, 1);
+    const depPerMile = safeDiv(purchase - currentVal, remainingMiles);
+    const depreciation = miles * depPerMile;
+
+    // Insurance
+    const monthlyIns = parseFloat(document.getElementById('monthlyInsurance').value) || 180;
+    const daysPerMonth = parseFloat(document.getElementById('daysPerMonth').value) || 25;
+    const insuranceDaily = safeDiv(monthlyIns, daysPerMonth);
+
+    // Registration
+    const annualReg = parseFloat(document.getElementById('annualRegistration').value) || 300;
+    const registrationDaily = safeDiv(annualReg, 365) * (daysPerMonth / 30);
+
+    // Other
+    const tolls = parseFloat(document.getElementById('tolls').value) || 0;
+    const parking = parseFloat(document.getElementById('parking').value) || 0;
+    const carWash = parseFloat(document.getElementById('carWash').value) || 0;
+    const phone = parseFloat(document.getElementById('phoneCost').value) || 0;
+    const otherExp = parseFloat(document.getElementById('otherExpenses').value) || 0;
+    const otherTotal = tolls + parking + carWash + phone + otherExp;
+
+    const totalCosts = fuelCost + maintenance + depreciation + insuranceDaily + registrationDaily + otherTotal;
+    const realProfit = totalGross - totalCosts;
+
+    // Metrics
+    const profitPerHour = safeDiv(realProfit, hours);
+    const profitPerMile = safeDiv(realProfit, miles);
+    const costPerMile = safeDiv(totalCosts, miles);
+    const grossPerHour = safeDiv(totalGross, hours);
+
+    return { totalGross, fuelCost, maintenance, depreciation, insuranceDaily, registrationDaily, otherTotal, totalCosts, realProfit, profitPerHour, profitPerMile, costPerMile, grossPerHour, miles, hours };
+  }
+
+  function showResults() {
+    const r = calculateAll();
+    document.getElementById('realProfitHero').textContent = fmt(r.realProfit);
+    document.getElementById('resGross').textContent = fmt(r.totalGross);
+    document.getElementById('resFuel').textContent = '−' + fmt(r.fuelCost);
+    document.getElementById('resMaintenance').textContent = '−' + fmt(r.maintenance);
+    document.getElementById('resDepreciation').textContent = '−' + fmt(r.depreciation);
+    document.getElementById('resInsurance').textContent = '−' + fmt(r.insuranceDaily);
+    document.getElementById('resRegistration').textContent = '−' + fmt(r.registrationDaily);
+    document.getElementById('resOther').textContent = '−' + fmt(r.otherTotal);
+    document.getElementById('resTotalCosts').textContent = fmt(r.totalCosts);
+    document.getElementById('resRealProfit').textContent = fmt(r.realProfit);
+
+    document.getElementById('grossVsThink').textContent = fmt(r.totalGross, 0);
+    document.getElementById('grossVsKeep').textContent = fmt(r.realProfit, 0);
+    document.getElementById('grossVsCosts').textContent = fmt(r.totalCosts, 0);
+
+    document.getElementById('metricProfitHour').textContent = fmt(r.profitPerHour) + '/hr';
+    document.getElementById('metricProfitMile').textContent = fmt(r.profitPerMile) + '/mi';
+    document.getElementById('metricCostMile').textContent = fmt(r.costPerMile) + '/mi';
+    document.getElementById('metricGrossHour').textContent = fmt(r.grossPerHour) + '/hr';
+
+    // Cost breakdown chart
+    const chart = document.getElementById('costBreakdownChart');
+    const items = [
+      { label: 'Fuel', value: r.fuelCost, max: r.totalCosts },
+      { label: 'Maintenance', value: r.maintenance, max: r.totalCosts },
+      { label: 'Depreciation', value: r.depreciation, max: r.totalCosts },
+      { label: 'Insurance', value: r.insuranceDaily, max: r.totalCosts },
+      { label: 'Registration', value: r.registrationDaily, max: r.totalCosts },
+      { label: 'Other', value: r.otherTotal, max: r.totalCosts },
+    ];
+    chart.innerHTML = items.map(item => `
+      <div class="bar-item">
+        <span class="bar-label">${item.label}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${item.max > 0 ? (item.value / item.max * 100) : 0}%"></div></div>
+        <span class="bar-value">${fmt(item.value, 0)}</span>
+      </div>
+    `).join('');
+
+    document.getElementById('resultsSection').classList.remove('hidden');
+    document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+    updateDashboard();
+  }
+
+  // ============================================================
+  // DASHBOARD & HISTORY
+  // ============================================================
+  function saveToHistory() {
+    const r = calculateAll();
+    const record = {
+      date: new Date().toISOString().slice(0, 10),
+      gross: r.totalGross,
+      expenses: r.totalCosts,
+      realProfit: r.realProfit,
+      miles: r.miles,
+      hours: r.hours,
+      profitPerHour: r.profitPerHour,
+    };
+    state.history.unshift(record);
+    if (state.history.length > 30) state.history.pop();
+    localStorage.setItem('td_history', JSON.stringify(state.history));
+    updateDashboard();
+    alert('Calculation saved to history.');
+  }
+
+  function updateDashboard() {
+    const today = new Date().toISOString().slice(0, 10);
+    const todayRecords = state.history.filter(r => r.date === today);
+    const todayProfit = todayRecords.reduce((s, r) => s + r.realProfit, 0);
+    document.getElementById('dashTodayProfit').textContent = fmt(todayProfit);
+
+    const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10);
+    const weekRecords = state.history.filter(r => r.date >= weekAgo);
+    document.getElementById('dashWeekProfit').textContent = fmt(weekRecords.reduce((s, r) => s + r.realProfit, 0));
+
+    const monthAgo = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
+    const monthRecords = state.history.filter(r => r.date >= monthAgo);
+    document.getElementById('dashMonthProfit').textContent = fmt(monthRecords.reduce((s, r) => s + r.realProfit, 0));
+
+    const list = document.getElementById('historyList');
+    if (state.history.length === 0) {
+      list.innerHTML = '<p class="text-sm text-[#5A6579]">No saved calculations yet. Calculate and save your first day.</p>';
+      return;
+    }
+    list.innerHTML = state.history.map((rec, i) => `
+      <div class="flex justify-between items-center p-3 bg-[#F8F9FC] rounded-xl text-sm">
+        <div><span class="font-medium">${rec.date}</span> <span class="text-[#5A6579]">· ${rec.miles} mi · ${rec.hours} hr</span></div>
+        <div class="text-right"><div class="font-bold text-[#2463EB]">${fmt(rec.realProfit)}</div><div class="text-xs text-[#5A6579]">${fmt(rec.profitPerHour)}/hr</div></div>
+      </div>
+    `).join('');
+  }
+
+  // ============================================================
+  // SAVE VEHICLE
+  // ============================================================
+  function saveVehicle() {
+    const vehicle = {
+      year: document.getElementById('vehicleYear').value,
+      make: document.getElementById('vehicleMake').value,
+      model: document.getElementById('vehicleModel').value,
+      trim: document.getElementById('vehicleTrim').value,
+      mpg: state.customMpg || state.mpg,
+      customMpg: state.customMpg,
+      isEV: state.isEV,
+    };
+    localStorage.setItem('td_vehicle', JSON.stringify(vehicle));
+    alert('Vehicle saved! It will load automatically next time.');
+  }
+
+  function loadSavedVehicle() {
+    const saved = state.savedVehicle;
+    if (!saved) return;
+    document.getElementById('vehicleYear').value = saved.year || '2022';
+    document.getElementById('vehicleMake').value = saved.make || 'Toyota';
+    populateModels();
+    document.getElementById('vehicleModel').value = saved.model || 'Camry';
+    populateTrims();
+    document.getElementById('vehicleTrim').value = saved.trim || 'LE 2.5L';
+    if (saved.customMpg) {
+      state.customMpg = saved.customMpg;
+      document.getElementById('customMpgInput').value = saved.customMpg;
+      document.getElementById('mpgDisplay').textContent = saved.customMpg;
+      document.getElementById('mpgSource').textContent = 'Using your custom MPG';
+      document.getElementById('mpgOverrideNote').textContent = 'Custom MPG is active.';
+    }
+  }
+
+  // ============================================================
+  // EVENT LISTENERS
+  // ============================================================
+  document.addEventListener('DOMContentLoaded', function() {
+    // Mobile menu
+    document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
+    });
+
+    // Theme toggle (light default, toggles to dark)
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      alert('Theme toggle is a demo. Full dark mode available in premium version.');
+    });
+
+    // Vehicle selects
+    document.getElementById('vehicleYear').addEventListener('change', () => {});
+    document.getElementById('vehicleMake').addEventListener('change', populateModels);
+    document.getElementById('vehicleModel').addEventListener('change', populateTrims);
+    document.getElementById('vehicleTrim').addEventListener('change', updateMPGFromVehicle);
+
+    // MPG override
+    document.getElementById('changeMpgBtn').addEventListener('click', () => {
+      document.getElementById('customMpgPanel').classList.toggle('hidden');
+    });
+    document.getElementById('saveCustomMpg').addEventListener('click', () => {
+      const val = parseFloat(document.getElementById('customMpgInput').value);
+      if (val > 0) {
+        state.customMpg = val;
+        document.getElementById('mpgDisplay').textContent = val;
+        document.getElementById('mpgSource').textContent = 'Using your custom MPG';
+        document.getElementById('mpgOverrideNote').textContent = 'Custom MPG is active.';
+      }
+    });
+    document.getElementById('resetMpg').addEventListener('click', () => {
+      state.customMpg = null;
+      document.getElementById('customMpgInput').value = '';
+      document.getElementById('mpgOverrideNote').textContent = '';
+      updateMPGFromVehicle();
+    });
+
+    // Fuel method
+    document.querySelectorAll('.fuel-method').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.fuel-method').forEach(b => b.classList.remove('active', 'btn-primary'));
+        this.classList.add('active');
+        state.fuelMethod = this.dataset.method;
+        if (state.fuelMethod === 'spent') {
+          document.getElementById('fuelSpentPanel').classList.remove('hidden');
+          document.getElementById('fuelCalcPanel').classList.add('hidden');
+        } else {
+          document.getElementById('fuelSpentPanel').classList.add('hidden');
+          document.getElementById('fuelCalcPanel').classList.remove('hidden');
+        }
+      });
+    });
+
+    // Live fuel calc
+    document.getElementById('milesForFuel').addEventListener('input', updateFuelCalc);
+    document.getElementById('gasPrice').addEventListener('input', updateFuelCalc);
+
+    // Live total gross
+    ['grossEarnings', 'tips', 'bonuses', 'otherIncome'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updateTotalGross);
+    });
+
+    // Live maintenance
+    document.getElementById('maintenanceRate').addEventListener('input', function() {
+      const miles = parseFloat(document.getElementById('milesDriven').value) || 0;
+      const rate = parseFloat(this.value) || 0;
+      document.getElementById('maintenanceTotal').textContent = '= ' + fmt(miles * rate);
+    });
+    document.getElementById('milesDriven').addEventListener('input', function() {
+      const miles = parseFloat(this.value) || 0;
+      const rate = parseFloat(document.getElementById('maintenanceRate').value) || 0;
+      document.getElementById('maintenanceTotal').textContent = '= ' + fmt(miles * rate);
+    });
+
+    // Live depreciation
+    function updateDepreciation() {
+      const purchase = parseFloat(document.getElementById('purchasePrice').value) || 28000;
+      const current = parseFloat(document.getElementById('currentValue').value) || 18000;
+      const odo = parseFloat(document.getElementById('currentOdometer').value) || 45000;
+      const repl = parseFloat(document.getElementById('replacementMileage').value) || 200000;
+      const miles = parseFloat(document.getElementById('milesDriven').value) || 0;
+      const perMile = safeDiv(purchase - current, Math.max(repl - odo, 1));
+      document.getElementById('depreciationTotal').textContent = '= ' + fmt(miles * perMile);
+    }
+    ['purchasePrice', 'currentValue', 'currentOdometer', 'replacementMileage', 'milesDriven'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updateDepreciation);
+    });
+
+    // Live insurance / registration
+    function updateInsuranceReg() {
+      const ins = parseFloat(document.getElementById('monthlyInsurance').value) || 180;
+      const days = parseFloat(document.getElementById('daysPerMonth').value) || 25;
+      document.getElementById('insuranceDaily').textContent = '= ' + fmt(safeDiv(ins, days)) + '/day';
+      const reg = parseFloat(document.getElementById('annualRegistration').value) || 300;
+      document.getElementById('registrationDaily').textContent = '= ' + fmt(safeDiv(reg, 365) * (days / 30)) + '/day';
+    }
+    ['monthlyInsurance', 'daysPerMonth', 'annualRegistration'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updateInsuranceReg);
+    });
+
+    // Calculate button
+    document.getElementById('calculateBtn').addEventListener('click', showResults);
+
+    // Save buttons
+    document.getElementById('saveResultBtn').addEventListener('click', saveVehicle);
+    document.getElementById('saveRecordBtn').addEventListener('click', saveToHistory);
+
+    // Clear history
+    document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+      if (confirm('Clear all saved history?')) {
+        state.history = [];
+        localStorage.removeItem('td_history');
+        updateDashboard();
+      }
+    });
+
+    // Break-even calculator
+    document.getElementById('calcBreakEven').addEventListener('click', function() {
+      const targetProfit = parseFloat(document.getElementById('targetProfit').value) || 200;
+      const miles = parseFloat(document.getElementById('targetMiles').value) || 250;
+      const hours = parseFloat(document.getElementById('targetHours').value) || 10;
+
+      // Use current cost assumptions from the main form
+      const r = calculateAll();
+      const costPerMile = safeDiv(r.totalCosts, r.miles || 1);
+      const estimatedCosts = costPerMile * miles;
+      const requiredGross = targetProfit + estimatedCosts;
+      const requiredGrossHour = safeDiv(requiredGross, hours);
+
+      document.getElementById('beCosts').textContent = fmt(estimatedCosts);
+      document.getElementById('beDesired').textContent = fmt(targetProfit);
+      document.getElementById('beGross').textContent = fmt(requiredGross);
+      document.getElementById('beGrossHour').textContent = fmt(requiredGrossHour) + '/hr';
+      document.getElementById('breakEvenResult').classList.remove('hidden');
+    });
+
+    // Initialize
+    populateMakes();
+    loadSavedVehicle();
+    updateTotalGross();
+    updateDashboard();
+    updateFuelCalc();
+    updateDepreciation();
+    updateInsuranceReg();
+
+    // Set initial MPG
+    updateMPGFromVehicle();
+  });
+</script>
+
+<script>if(window.lucide) lucide.createIcons();</script></body></html>
